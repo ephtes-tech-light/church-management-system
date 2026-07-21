@@ -63,7 +63,7 @@ class Event(models.Model):
     def __str__(self):
         return self.title
     
-class Dontaion(models.Model):
+class Donation(models.Model):
     PURPOSE_CHOICE=[
         ('tithe',"Thite"),
         ('offering',"Offering"),
