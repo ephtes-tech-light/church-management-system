@@ -35,7 +35,7 @@ class MemberViewSet(viewsets.ModelViewSet):
         return queryset
 class MinistryViewSet(viewsets.ModelViewSet):
     queryset=Ministry.objects.all().order_by('name')
-    serializer_class=MinitstrySerializer
+    serializer_class=MinitstrySerializer 
 class EventViewSet(viewsets.ModelViewSet):
     queryset=Event.objects.all().order_by('start_time')
     serializer_class=EventSerializer

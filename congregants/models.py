@@ -1,4 +1,5 @@
-from datetime import timezone
+from django.utils import timezone  
+
 
 from django.db import models
 
@@ -35,11 +36,14 @@ class Member(models.Model):
 class Ministry(models.Model):
     name=models.CharField(max_length=50)
     description=models.TextField(blank=True)
-    leader=models.ForeignKey(Member,related_name='led_ministries',blank=True)
+    #leader=models.ForeignKey(Member,related_name='led_ministries',blank=True)
+    leader = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True, blank=True, related_name='led_ministries')  # ✅ Fixed
     members=models.ManyToManyField(Member,related_name="ministries")
     created_at=models.DateTimeField(auto_now_add=True)
+    #class Meta:
+     #   verbouse_name_plural="Ministries"
     class Meta:
-        verbouse_name_plural="Ministries"
+     verbose_name_plural = "Ministries"  # ✅ Fixed ('verbose')
     def __str__(self):
         return self.name
 
