@@ -19,8 +19,8 @@ class MemberSerializer(serializers.ModelSerializer):
             'join_date', 'family', 'family_name', 'family_relationship', 
             'photo_url', 'created_at'
           ]  
-        def get_full_name(self, obj):
-            return f"{obj.first_name} {obj.last_name}"
+    def get_full_name(self, obj):
+        return f"{obj.first_name} {obj.last_name}"
 
 class MinitstrySerializer(serializers.ModelSerializer):
     leader_name=serializers.SerializerMethodField()
@@ -30,10 +30,10 @@ class MinitstrySerializer(serializers.ModelSerializer):
         model = Ministry
         fields=['id', 'name', 'description', 'leader', 'leader_name', 'members', 'member_count', 'created_at']
 
-        def get_leader_name(self,obj):
-            if obj.leader:
-               return f"{obj.leader.first_name} {obj.leader.last_name}" 
-            return "No Leader"
+    def get_leader_name(self,obj):
+        if obj.leader:
+           return f"{obj.leader.first_name} {obj.leader.last_name}" 
+        return "No Leader"
 
 class EventSerializer(serializers.ModelSerializer):
     event_type_display=serializers.CharField(source='get_event_type_display',read_only=True)
@@ -44,8 +44,8 @@ class EventSerializer(serializers.ModelSerializer):
 
 class DonationSerializer(serializers.ModelSerializer):
     member_name=serializers.SerializerMethodField()
-    #purpose_display = serializers.CharField('get_payment_method_display', read_only=True)
-    purpose_display = serializers.CharField(source='get_purpose_display', read_only=True)  # ✅ Fixed using source=
+
+    purpose_display = serializers.CharField(source='get_purpose_display', read_only=True)  
     class Meta:
         model=Donation
         fields = [
