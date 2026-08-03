@@ -2,6 +2,9 @@ from django.contrib import admin
 
 from congregants.models import Donation, Event, Family, Member, Ministry
 
+admin.site.site_header = "MKC Church Management System"
+admin.site.site_title = "MKC Church Admin Portal"
+admin.site.index_title = "Welcome to the Church Administration Center"
 #inlines
 
 class MemberInline(admin.TabularInline):
@@ -9,6 +12,7 @@ class MemberInline(admin.TabularInline):
     fields=('first_name','last_name','family_relationship','membership_status','phone')
     extra=1
     show_change_link=True
+    
 
 class DonationInline(admin.TabularInline):
     model=Donation
@@ -33,11 +37,13 @@ class FamilyAdmin(admin.ModelAdmin):
 class MemberAdmin(admin.ModelAdmin):
     list_display=('first_name', 'last_name', 'email', 'phone', 'membership_status', 'join_date', 'family')
     list_filter=('membership_status', 'gender', 'join_date', 'family')
-    search_fields=('first_name', 'last_name', 'email', 'phone')
+    search_fields=('first_name', 'last_name', 'email', 'phone','family__name')
     ordering=('first_name', 'last_name')
     list_editable = ('membership_status',)
     inlines = [DonationInline]
     autocomplete_fields = ('family',)
+    list_per_page=25
+    readonly_fields = ('created_at',)
 
     # Grouping form fields logically in the edit view
     fieldsets = (
@@ -82,4 +88,4 @@ class DonationAdmin(admin.ModelAdmin):
     list_filter = ('purpose', 'payment_method', 'date')
     search_fields = ('member_first_name', 'member_last_name','notes')
     ordering = ('-date', 'created_at')
-    
+

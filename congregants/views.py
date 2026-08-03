@@ -66,7 +66,7 @@ class DashboardStatsView(APIView):
 
         # Recent Donations (last 5)
         recent_donations = Donation.objects.all().order_by('-date', '-created_at')[:5]
-        recent_donations_serialized = DonationSerializer(recent_donations, many=True).data
+        recent_donations_serialized = DonationSerializer(recent_donations, many=True).data;
 
         # Upcoming Events (next 4)
         upcoming_events = Event.objects.filter(end_time__gte=now).order_by('start_time')[:4]
