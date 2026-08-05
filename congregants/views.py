@@ -11,6 +11,7 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from datetime import timedelta
+
 # Create your views here.
 class FamilyViewSet(viewsets.ModelViewSet):
 
@@ -48,13 +49,6 @@ class EventViewSet(viewsets.ModelViewSet):
 class DonationViewSet(viewsets.ModelViewSet):
     queryset=Donation.objects.all().order_by('-date','-created_at')
     serializer_class=DonationSerializer
-class DashboardStatsView(APIView):
-     from datetime import timedelta
-from django.db.models import Sum, Count, Q
-from django.db.models.functions import TruncMonth
-from django.utils import timezone
-from rest_framework.views import APIView
-from rest_framework.response import Response
 
 class DashboardStatsView(APIView):
     def get(self, request):
