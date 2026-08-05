@@ -46,6 +46,7 @@ class DonationSerializer(serializers.ModelSerializer):
     member_name=serializers.SerializerMethodField()
 
     purpose_display = serializers.CharField(source='get_purpose_display', read_only=True)  
+    payment_method_display = serializers.CharField(source='get_payment_method_display', read_only=True)
     class Meta:
         model=Donation
         fields = [
