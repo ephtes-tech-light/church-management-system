@@ -1,11 +1,10 @@
 
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.views import APIView, Response
 from congregants.models import Donation, Event, Family, Member, Ministry
 from congregants.serializers import DonationSerializer, EventSerializer, FamilySerializer, MemberSerializer, MinitstrySerializer
-
-
-from django.db.models import Sum, Q
+from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Sum
 from django.db.models.functions import TruncMonth
 from django.utils import timezone
 from rest_framework import viewsets
@@ -14,28 +13,27 @@ from rest_framework.response import Response
 from datetime import timedelta
 # Create your views here.
 class FamilyViewSet(viewsets.ModelViewSet):
-    queryset=Family.objects.all().order_by('name')
+
+    # prefetch_related reduces queries when fetching family members
+    queryset=Family.objects.prefetch_related('members').order_by('name')
     serializer_class=FamilySerializer
+    search_fields=['name']
 
 class MemberViewSet(viewsets.ModelViewSet):
-    queryset=Member.objects.all().order_by('first_name','last_name')
+  
+    queryset=Member.objects.select_related('family')
     serializer_class=MemberSerializer
+    filter_backends=[DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
     filterset_fields = ['membership_status', 'family']
-
-    def get_queryset(self):
-        queryset = self.queryset
-        search = self.request.query_params.get('search', None)
-        if search:
-            queryset = queryset.filter(
-                Q(first_name__icontains=search) |
-                Q(last_name__icontains=search) |
-                Q(email__icontains=search) |
-                Q(phone__icontains=search)
-            )
-        return queryset
+    search_fields=['first_name','last_name','email','phone']
+    ordering_fields=['name']
+    
 class MinistryViewSet(viewsets.ModelViewSet):
-    queryset=Ministry.objects.all().order_by('name')
+    
+    queryset=Ministry.objects.select_related('leader').prefetch_related('members')
     serializer_class=MinitstrySerializer 
+    filter_backends=[filters.SearchFilter]
+    search_fields=['name']
 class EventViewSet(viewsets.ModelViewSet):
     queryset=Event.objects.all().order_by('start_time')
     serializer_class=EventSerializer
