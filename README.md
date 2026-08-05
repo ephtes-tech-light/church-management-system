@@ -1,7 +1,6 @@
 Church Management System API
 A robust, query-optimized Django REST Framework backend designed to handle church administration, member directory, ministry structures, event tracking, financial donations, and real-time dashboard analytics.
-
-🚀 Features
+ **Features**
 Member & Family Management: Track congregants, membership statuses (active, inactive, etc.), and household relationships using optimized prefetching.
 
 Ministry Tracking: Manage church groups, ministry leaders, and assigned members with single-query join fetching (select_related and prefetch_related).
@@ -24,7 +23,7 @@ Purpose-based financial breakdown (Tithe, Offering, Building Fund, Missions, Oth
 
 6-month historical giving trend formatted by month.
 
-🛠️ Tech Stack
+** Tech Stack**
 Language: Python 3.13+
 
 Framework: Django 5.x / Django REST Framework (DRF)
