@@ -11,9 +11,13 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from datetime import timedelta
-
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 # Create your views here.
 class FamilyViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access this view
 
     # prefetch_related reduces queries when fetching family members
     queryset=Family.objects.prefetch_related('members').order_by('name')
@@ -21,7 +25,7 @@ class FamilyViewSet(viewsets.ModelViewSet):
     search_fields=['name']
 
 class MemberViewSet(viewsets.ModelViewSet):
-  
+    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access this view
     queryset=Member.objects.select_related('family')
     serializer_class=MemberSerializer
     filter_backends=[DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
@@ -30,12 +34,13 @@ class MemberViewSet(viewsets.ModelViewSet):
     ordering_fields=['name']
     
 class MinistryViewSet(viewsets.ModelViewSet):
-    
+    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access this view
     queryset=Ministry.objects.select_related('leader').prefetch_related('members')
     serializer_class=MinitstrySerializer 
     filter_backends=[filters.SearchFilter]
     search_fields=['name']
 class EventViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access this view
     queryset=Event.objects.all().order_by('start_time')
     serializer_class=EventSerializer
     def get_queryset(self):
@@ -47,10 +52,12 @@ class EventViewSet(viewsets.ModelViewSet):
 
 
 class DonationViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access this view
     queryset=Donation.objects.all().order_by('-date','-created_at')
     serializer_class=DonationSerializer
 
 class DashboardStatsView(APIView):
+    permission_classes = [AllowAny] 
     def get(self, request):
         now = timezone.now()
         thirty_days_ago = now.date() - timedelta(days=30)
@@ -127,3 +134,16 @@ class DashboardStatsView(APIView):
             'purpose_breakdown': purpose_data,
             'giving_history': history_data
         })
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()  # Adds token to blacklistedtoken table
+            
+            return Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": "Invalid or expired refresh token."}, status=status.HTTP_400_BAD_REQUEST)

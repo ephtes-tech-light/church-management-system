@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'congregants',
     'django_filters',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -140,5 +141,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60), # Access token lasts 1 hour
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # Refresh token lasts 1 day
-    'AUTH_HEADER_TYPES': ('Bearer',),                # Requires "Authorization: Bearer <token>"
+    'AUTH_HEADER_TYPES': ('Bearer',),   
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True, # <-- Automatically blacklist old refresh tokens when rotated             # Requires "Authorization: Bearer <token>"
 }
