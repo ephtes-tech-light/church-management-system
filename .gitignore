@@ -1,1 +1,7 @@
+# Django default database file
 db.sqlite3
+
+# General SQLite file extensions
+*.sqlite3
+*.sqlite
+*.db
