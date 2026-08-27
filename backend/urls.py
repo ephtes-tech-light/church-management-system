@@ -17,20 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from rest_framework.routers import DefaultRouter  
-
-from congregants.views import DashboardStatsView, DonationViewSet, EventViewSet, FamilyViewSet, MemberViewSet, MinistryViewSet
-
-router=DefaultRouter()
-router.register(r'families',FamilyViewSet, basename='family')
-router.register(r'members', MemberViewSet, basename='member')
-router.register(r'ministries', MinistryViewSet, basename='ministry')
-router.register(r'events', EventViewSet, basename='event')
-router.register(r'donations', DonationViewSet, basename='donation')
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include(router.urls)),
-    path('dashboard-stats/', DashboardStatsView.as_view())
+    path('api/', include('congregants.urls')),
 ]
 
 
